@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <ros2_control name="mycobot_280pi_gazebo" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+
+    <joint name="joint2_to_joint1">
+      <command_interface name="position">
+        <param name="min">-2.9321</param>
+        <param name="max">2.9321</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+    <joint name="joint3_to_joint2">
+      <command_interface name="position">
+        <param name="min">-2.4434</param>
+        <param name="max">2.4434</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+    <joint name="joint4_to_joint3">
+      <command_interface name="position">
+        <param name="min">-2.6179</param>
+        <param name="max">2.6179</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+    <joint name="joint5_to_joint4">
+      <command_interface name="position">
+        <param name="min">-2.6179</param>
+        <param name="max">2.6179</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+    <joint name="joint6_to_joint5">
+      <command_interface name="position">
+        <param name="min">-2.7052</param>
+        <param name="max">2.7925</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+    <joint name="joint6output_to_joint6">
+      <command_interface name="position">
+        <param name="min">-3.14159</param>
+        <param name="max">3.14159</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+  </ros2_control>
+
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <parameters>$(find mycobot_280pi_gazebo)/config/controllers.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+  <!-- Use simple colored cylinders in Gazebo instead of heavy .dae meshes.
+       This makes Gazebo load instantly while RViz still shows the real meshes.
+       The <gazebo reference> block overrides ONLY what Gazebo sees. -->
+  <gazebo reference="base_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.04" radius="0.06"/>
+      </geometry>
+      <material>
+        <ambient>0.1 0.1 0.1 1</ambient>
+        <diffuse>0.1 0.1 0.1 1</diffuse>
+      </material>
+    </visual>
+  </gazebo>
+  <gazebo reference="link1">
+    <visual>
+      <geometry>
+        <cylinder length="0.08" radius="0.04"/>
+      </geometry>
+      <material>
+        <ambient>0.5 0.5 0.5 1</ambient>
+        <diffuse>0.5 0.5 0.5 1</diffuse>
+      </material>
+    </visual>
+  </gazebo>
+  <gazebo reference="link2">
+    <visual>
+      <geometry>
+        <box size="0.11 0.04 0.04"/>
+      </geometry>
+      <material>
+        <ambient>0.9 0.9 0.9 1</ambient>
+        <diffuse>0.9 0.9 0.9 1</diffuse>
+      </material>
+    </visual>
+  </gazebo>
+  <gazebo reference="link3">
+    <visual>
+      <geometry>
+        <box size="0.096 0.04 0.04"/>
+      </geometry>
+      <material>
+        <ambient>0.9 0.9 0.9 1</ambient>
+        <diffuse>0.9 0.9 0.9 1</diffuse>
+      </material>
+    </visual>
+  </gazebo>
+  <gazebo reference="link4">
+    <visual>
+      <geometry>
+        <box size="0.096 0.04 0.04"/>
+      </geometry>
+      <material>
+        <ambient>0.5 0.5 0.5 1</ambient>
+        <diffuse>0.5 0.5 0.5 1</diffuse>
+      </material>
+    </visual>
+  </gazebo>
+  <gazebo reference="link5">
+    <visual>
+      <geometry>
+        <cylinder length="0.04" radius="0.03"/>
+      </geometry>
+      <material>
+        <ambient>0.1 0.1 0.1 1</ambient>
+        <diffuse>0.1 0.1 0.1 1</diffuse>
+      </material>
+    </visual>
+  </gazebo>
+  <gazebo reference="link6">
+    <visual>
+      <geometry>
+        <cylinder length="0.04" radius="0.03"/>
+      </geometry>
+      <material>
+        <ambient>0.5 0.5 0.5 1</ambient>
+        <diffuse>0.5 0.5 0.5 1</diffuse>
+      </material>
+    </visual>
+  </gazebo>
+  <gazebo reference="link6_flange">
+    <visual>
+      <geometry>
+        <cylinder length="0.02" radius="0.025"/>
+      </geometry>
+      <material>
+        <ambient>0.1 0.1 0.1 1</ambient>
+        <diffuse>0.1 0.1 0.1 1</diffuse>
+      </material>
+    </visual>
+  </gazebo>
+
+</robot>
