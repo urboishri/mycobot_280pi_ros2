@@ -1,10 +1,11 @@
-<?xml version="1.0"?>
+<?xml version="1.1"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="mycobot_280pi">
 
   <xacro:property name="width" value=".2"/>
 
   <xacro:include filename="$(find mycobot_280pi_description)/urdf/mycobot_280pi.ros2_control.xacro"/>
 
+  <!-- World link required by MoveIt and KDL -->
   <link name="world"/>
   <joint name="world_to_base" type="fixed">
     <parent link="world"/>
@@ -12,6 +13,7 @@
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </joint>
 
+  <!-- base_link replaces g_base — same geometry, ROS 2 naming convention -->
   <link name="base_link">
     <visual>
       <geometry>
@@ -32,7 +34,8 @@
     </inertial>
   </link>
 
-  <link name="link1">
+  <!-- Original link names from Elephant Robotics restored -->
+  <link name="joint1">
     <visual>
       <geometry>
         <mesh filename="package://mycobot_280pi_description/meshes/visual/joint1_pi.dae"/>
@@ -52,7 +55,7 @@
     </inertial>
   </link>
 
-  <link name="link2">
+  <link name="joint2">
     <visual>
       <geometry>
         <mesh filename="package://mycobot_280pi_description/meshes/visual/joint2.dae"/>
@@ -72,7 +75,7 @@
     </inertial>
   </link>
 
-  <link name="link3">
+  <link name="joint3">
     <visual>
       <geometry>
         <mesh filename="package://mycobot_280pi_description/meshes/visual/joint3.dae"/>
@@ -92,7 +95,7 @@
     </inertial>
   </link>
 
-  <link name="link4">
+  <link name="joint4">
     <visual>
       <geometry>
         <mesh filename="package://mycobot_280pi_description/meshes/visual/joint4.dae"/>
@@ -112,7 +115,7 @@
     </inertial>
   </link>
 
-  <link name="link5">
+  <link name="joint5">
     <visual>
       <geometry>
         <mesh filename="package://mycobot_280pi_description/meshes/visual/joint5.dae"/>
@@ -132,7 +135,7 @@
     </inertial>
   </link>
 
-  <link name="link6">
+  <link name="joint6">
     <visual>
       <geometry>
         <mesh filename="package://mycobot_280pi_description/meshes/visual/joint6.dae"/>
@@ -152,7 +155,7 @@
     </inertial>
   </link>
 
-  <link name="link6_flange">
+  <link name="joint6_flange">
     <visual>
       <geometry>
         <mesh filename="package://mycobot_280pi_description/meshes/visual/joint7.dae"/>
@@ -172,63 +175,66 @@
     </inertial>
   </link>
 
-  <joint name="base_to_link1" type="fixed">
+  <!-- ===================== JOINTS ===================== -->
+  <!-- Exact original joint origins from Elephant Robotics ROS1 URDF -->
+
+  <joint name="base_to_joint1" type="fixed">
     <parent link="base_link"/>
-    <child link="link1"/>
+    <child link="joint1"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </joint>
 
   <joint name="joint2_to_joint1" type="revolute">
     <axis xyz="0 0 1"/>
     <limit effort="1000.0" lower="-2.9321" upper="2.9321" velocity="2.0"/>
-    <parent link="link1"/>
-    <child link="link2"/>
-    <origin xyz="0 0 0.13956" rpy="0 1.5708 -1.5708"/>
+    <parent link="joint1"/>
+    <child link="joint2"/>
+    <origin xyz="0 0 0.13956" rpy="0 0 0"/>
     <dynamics damping="0.1" friction="0.1"/>
   </joint>
 
   <joint name="joint3_to_joint2" type="revolute">
     <axis xyz="0 0 1"/>
     <limit effort="1000.0" lower="-2.4434" upper="2.4434" velocity="2.0"/>
-    <parent link="link2"/>
-    <child link="link3"/>
-    <origin xyz="-0.1104 0 0" rpy="0 0 0"/>
+    <parent link="joint2"/>
+    <child link="joint3"/>
+    <origin xyz="0 0 -0.001" rpy="0 1.5708 -1.5708"/>
     <dynamics damping="0.1" friction="0.1"/>
   </joint>
 
   <joint name="joint4_to_joint3" type="revolute">
     <axis xyz="0 0 1"/>
     <limit effort="1000.0" lower="-2.6179" upper="2.6179" velocity="2.0"/>
-    <parent link="link3"/>
-    <child link="link4"/>
-    <origin xyz="-0.096 0 0.06462" rpy="0 0 -1.5708"/>
+    <parent link="joint3"/>
+    <child link="joint4"/>
+    <origin xyz="-0.1104 0 0" rpy="0 0 0"/>
     <dynamics damping="0.1" friction="0.1"/>
   </joint>
 
   <joint name="joint5_to_joint4" type="revolute">
     <axis xyz="0 0 1"/>
     <limit effort="1000.0" lower="-2.6179" upper="2.6179" velocity="2.0"/>
-    <parent link="link4"/>
-    <child link="link5"/>
-    <origin xyz="0 -0.07318 -0.001" rpy="1.5708 -1.5708 0"/>
+    <parent link="joint4"/>
+    <child link="joint5"/>
+    <origin xyz="-0.096 0 0.06462" rpy="0 0 -1.5708"/>
     <dynamics damping="0.1" friction="0.1"/>
   </joint>
 
   <joint name="joint6_to_joint5" type="revolute">
     <axis xyz="0 0 1"/>
     <limit effort="1000.0" lower="-2.7052" upper="2.7925" velocity="2.0"/>
-    <parent link="link5"/>
-    <child link="link6"/>
-    <origin xyz="0 0.0456 0" rpy="-1.5708 0 0"/>
+    <parent link="joint5"/>
+    <child link="joint6"/>
+    <origin xyz="0 -0.07318 -0.001" rpy="1.5708 -1.5708 0"/>
     <dynamics damping="0.1" friction="0.1"/>
   </joint>
 
   <joint name="joint6output_to_joint6" type="revolute">
     <axis xyz="0 0 1"/>
     <limit effort="1000.0" lower="-3.14159" upper="3.14159" velocity="2.0"/>
-    <parent link="link6"/>
-    <child link="link6_flange"/>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="joint6"/>
+    <child link="joint6_flange"/>
+    <origin xyz="0 0.0456 0" rpy="-1.5708 0 0"/>
     <dynamics damping="0.1" friction="0.1"/>
   </joint>
 

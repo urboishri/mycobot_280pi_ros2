@@ -83,6 +83,8 @@
   <gazebo>
     <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
       <parameters>$(find mycobot_280pi_gazebo)/config/controllers.yaml</parameters>
+      <robot_param>robot_description</robot_param>
+      <robot_param_node>robot_state_publisher</robot_param_node>
     </plugin>
   </gazebo>
 
@@ -107,7 +109,7 @@
     </collision>
   </gazebo>
 
-  <gazebo reference="link1">
+  <gazebo reference="joint1">
     <visual>
       <geometry>
         <cylinder>
@@ -130,7 +132,7 @@
     </collision>
   </gazebo>
 
-  <gazebo reference="link2">
+  <gazebo reference="joint2">
     <visual>
       <geometry>
         <box>
@@ -151,9 +153,10 @@
     </collision>
   </gazebo>
 
-  <gazebo reference="link3">
+  <gazebo reference="joint3">
     <visual>
       <geometry>
+      
         <box>
           <size>0.096 0.04 0.04</size>
         </box>
@@ -172,7 +175,7 @@
     </collision>
   </gazebo>
 
-  <gazebo reference="link4">
+  <gazebo reference="joint4">
     <visual>
       <geometry>
         <box>
@@ -193,7 +196,7 @@
     </collision>
   </gazebo>
 
-  <gazebo reference="link5">
+  <gazebo reference="joint5">
     <visual>
       <geometry>
         <cylinder>
@@ -216,7 +219,7 @@
     </collision>
   </gazebo>
 
-  <gazebo reference="link6">
+  <gazebo reference="joint6">
     <visual>
       <geometry>
         <cylinder>
@@ -239,7 +242,7 @@
     </collision>
   </gazebo>
 
-  <gazebo reference="link6_flange">
+  <gazebo reference="joint6_flange">
     <visual>
       <geometry>
         <cylinder>
