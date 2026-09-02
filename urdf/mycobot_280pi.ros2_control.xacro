@@ -1,11 +1,36 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <ros2_control name="mycobot_280pi_gazebo" type="system">
+  <!-- ================================================================
+       SIMULATION vs REAL ROBOT SWITCH
+       
+       use_sim:=true  → Gazebo physics engine is the hardware
+       use_sim:=false → Real myCobot 280 Pi connected via USB
+       
+       Everything below the hardware block is identical for both.
+       This is the ros2_control abstraction in action — controllers
+       don't know or care what's underneath them.
+       ================================================================ -->
+  <xacro:arg name="use_sim" default="true"/>
+
+  <ros2_control name="mycobot_280pi" type="system">
     <hardware>
-      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+
+      <!-- SIMULATION MODE -->
+      <xacro:if value="$(arg use_sim)">
+        <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+      </xacro:if>
+
+      <!-- REAL ROBOT MODE -->
+      <xacro:unless value="$(arg use_sim)">
+        <plugin>mycobot_hardware_interface/MyCobotHardwareInterface</plugin>
+        <param name="port">/dev/ttyUSB0</param>
+        <param name="baud_rate">115200</param>
+      </xacro:unless>
+
     </hardware>
 
+    <!-- Joint declarations are identical for sim and real -->
     <joint name="joint2_to_joint1">
       <command_interface name="position">
         <param name="min">-2.9321</param>
@@ -80,189 +105,140 @@
 
   </ros2_control>
 
-  <gazebo>
-    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
-      <parameters>$(find mycobot_280pi_gazebo)/config/controllers.yaml</parameters>
-      <robot_param>robot_description</robot_param>
-      <robot_param_node>robot_state_publisher</robot_param_node>
-    </plugin>
-  </gazebo>
+  <!-- Gazebo plugin — only needed in simulation mode -->
+  <xacro:if value="$(arg use_sim)">
+    <gazebo>
+      <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+        <parameters>$(find mycobot_280pi_gazebo)/config/controllers.yaml</parameters>
+        <robot_param>robot_description</robot_param>
+        <robot_param_node>robot_state_publisher</robot_param_node>
+      </plugin>
+    </gazebo>
+  </xacro:if>
 
-  <gazebo reference="base_link">
-    <visual>
-      <geometry>
-        <box>
-          <size>0.1 0.1 0.04</size>
-        </box>
-      </geometry>
-      <material>
-        <ambient>0.1 0.1 0.1 1</ambient>
-        <diffuse>0.2 0.2 0.2 1</diffuse>
-      </material>
-    </visual>
-    <collision>
-      <geometry>
-        <box>
-          <size>0.1 0.1 0.04</size>
-        </box>
-      </geometry>
-    </collision>
-  </gazebo>
+  <!-- Gazebo visual overrides — only in simulation -->
+  <xacro:if value="$(arg use_sim)">
+    <gazebo reference="base_link">
+      <visual>
+        <geometry>
+          <box><size>0.1 0.1 0.04</size></box>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.2 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+      <collision>
+        <geometry><box><size>0.1 0.1 0.04</size></box></geometry>
+      </collision>
+    </gazebo>
 
-  <gazebo reference="joint1">
-    <visual>
-      <geometry>
-        <cylinder>
-          <radius>0.04</radius>
-          <length>0.08</length>
-        </cylinder>
-      </geometry>
-      <material>
-        <ambient>0.5 0.5 0.5 1</ambient>
-        <diffuse>0.6 0.6 0.6 1</diffuse>
-      </material>
-    </visual>
-    <collision>
-      <geometry>
-        <cylinder>
-          <radius>0.04</radius>
-          <length>0.08</length>
-        </cylinder>
-      </geometry>
-    </collision>
-  </gazebo>
+    <gazebo reference="joint1">
+      <visual>
+        <geometry>
+          <cylinder><radius>0.04</radius><length>0.08</length></cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.6 0.6 0.6 1</diffuse>
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder><radius>0.04</radius><length>0.08</length></cylinder>
+        </geometry>
+      </collision>
+    </gazebo>
 
-  <gazebo reference="joint2">
-    <visual>
-      <geometry>
-        <box>
-          <size>0.11 0.04 0.04</size>
-        </box>
-      </geometry>
-      <material>
-        <ambient>0.8 0.8 0.8 1</ambient>
-        <diffuse>0.9 0.9 0.9 1</diffuse>
-      </material>
-    </visual>
-    <collision>
-      <geometry>
-        <box>
-          <size>0.11 0.04 0.04</size>
-        </box>
-      </geometry>
-    </collision>
-  </gazebo>
+    <gazebo reference="joint2">
+      <visual>
+        <geometry><box><size>0.11 0.04 0.04</size></box></geometry>
+        <material>
+          <ambient>0.8 0.8 0.8 1</ambient>
+          <diffuse>0.9 0.9 0.9 1</diffuse>
+        </material>
+      </visual>
+      <collision>
+        <geometry><box><size>0.11 0.04 0.04</size></box></geometry>
+      </collision>
+    </gazebo>
 
-  <gazebo reference="joint3">
-    <visual>
-      <geometry>
-      
-        <box>
-          <size>0.096 0.04 0.04</size>
-        </box>
-      </geometry>
-      <material>
-        <ambient>0.8 0.8 0.8 1</ambient>
-        <diffuse>0.9 0.9 0.9 1</diffuse>
-      </material>
-    </visual>
-    <collision>
-      <geometry>
-        <box>
-          <size>0.096 0.04 0.04</size>
-        </box>
-      </geometry>
-    </collision>
-  </gazebo>
+    <gazebo reference="joint3">
+      <visual>
+        <geometry><box><size>0.096 0.04 0.04</size></box></geometry>
+        <material>
+          <ambient>0.8 0.8 0.8 1</ambient>
+          <diffuse>0.9 0.9 0.9 1</diffuse>
+        </material>
+      </visual>
+      <collision>
+        <geometry><box><size>0.096 0.04 0.04</size></box></geometry>
+      </collision>
+    </gazebo>
 
-  <gazebo reference="joint4">
-    <visual>
-      <geometry>
-        <box>
-          <size>0.096 0.04 0.04</size>
-        </box>
-      </geometry>
-      <material>
-        <ambient>0.4 0.4 0.4 1</ambient>
-        <diffuse>0.5 0.5 0.5 1</diffuse>
-      </material>
-    </visual>
-    <collision>
-      <geometry>
-        <box>
-          <size>0.096 0.04 0.04</size>
-        </box>
-      </geometry>
-    </collision>
-  </gazebo>
+    <gazebo reference="joint4">
+      <visual>
+        <geometry><box><size>0.096 0.04 0.04</size></box></geometry>
+        <material>
+          <ambient>0.4 0.4 0.4 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <collision>
+        <geometry><box><size>0.096 0.04 0.04</size></box></geometry>
+      </collision>
+    </gazebo>
 
-  <gazebo reference="joint5">
-    <visual>
-      <geometry>
-        <cylinder>
-          <radius>0.03</radius>
-          <length>0.04</length>
-        </cylinder>
-      </geometry>
-      <material>
-        <ambient>0.1 0.1 0.1 1</ambient>
-        <diffuse>0.2 0.2 0.2 1</diffuse>
-      </material>
-    </visual>
-    <collision>
-      <geometry>
-        <cylinder>
-          <radius>0.03</radius>
-          <length>0.04</length>
-        </cylinder>
-      </geometry>
-    </collision>
-  </gazebo>
+    <gazebo reference="joint5">
+      <visual>
+        <geometry>
+          <cylinder><radius>0.03</radius><length>0.04</length></cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.2 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder><radius>0.03</radius><length>0.04</length></cylinder>
+        </geometry>
+      </collision>
+    </gazebo>
 
-  <gazebo reference="joint6">
-    <visual>
-      <geometry>
-        <cylinder>
-          <radius>0.03</radius>
-          <length>0.04</length>
-        </cylinder>
-      </geometry>
-      <material>
-        <ambient>0.4 0.4 0.4 1</ambient>
-        <diffuse>0.5 0.5 0.5 1</diffuse>
-      </material>
-    </visual>
-    <collision>
-      <geometry>
-        <cylinder>
-          <radius>0.03</radius>
-          <length>0.04</length>
-        </cylinder>
-      </geometry>
-    </collision>
-  </gazebo>
+    <gazebo reference="joint6">
+      <visual>
+        <geometry>
+          <cylinder><radius>0.03</radius><length>0.04</length></cylinder>
+        </geometry>
+        <material>
+          <ambient>0.4 0.4 0.4 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder><radius>0.03</radius><length>0.04</length></cylinder>
+        </geometry>
+      </collision>
+    </gazebo>
 
-  <gazebo reference="joint6_flange">
-    <visual>
-      <geometry>
-        <cylinder>
-          <radius>0.025</radius>
-          <length>0.02</length>
-        </cylinder>
-      </geometry>
-      <material>
-        <ambient>0.1 0.1 0.1 1</ambient>
-        <diffuse>0.2 0.2 0.2 1</diffuse>
-      </material>
-    </visual>
-    <collision>
-      <geometry>
-        <cylinder>
-          <radius>0.025</radius>
-          <length>0.02</length>
-        </cylinder>
-      </geometry>
-    </collision>
-  </gazebo>
+    <gazebo reference="joint6_flange">
+      <visual>
+        <geometry>
+          <cylinder><radius>0.025</radius><length>0.02</length></cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.2 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder><radius>0.025</radius><length>0.02</length></cylinder>
+        </geometry>
+      </collision>
+    </gazebo>
+  </xacro:if>
 
 </robot>
